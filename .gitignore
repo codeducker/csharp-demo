@@ -7,3 +7,8 @@
 /HelloWorld/HelloWorld/obj
 /HelloWorld/HelloWorld/Properties
 *.exe
+/ObjectConsoleApp/ObjectConsoleApp/.vs/ObjectConsoleApp
+/ObjectConsoleApp/ObjectConsoleApp/bin/Debug/net6.0
+/ObjectConsoleApp/ObjectConsoleApp/obj
+*.bin
+/.vs
