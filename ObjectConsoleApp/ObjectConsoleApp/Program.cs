@@ -169,12 +169,74 @@ namespace ObjectConsoleApp
         public double Diagonal => Math.Sqrt(Length * Length + Width * Width);
     }
 
+    //[Flags] //编译器创建值的另一个字符串表示的信息
+    public enum DaysOfWeek
+    {
+        Monday = 0x1,
+        Tuesday = 0x2,
+        Wednesday = 0x4,
+        Thursday = 0x8,
+        Friday = 0x10,
+        Saturday = 0x20,
+        Sunday = 0x40
+    }
+
+    //partial 部分类 将内容分拆到不同代码块内 可以用于修饰 class struct interface等部分
+    partial class SampleClass
+    {
+        public void MethodOne() {
+            Console.WriteLine("One");
+            ApiMethodLoad();
+        }
+
+        public partial void ApiMethodLoad(); //此时其他part部分必须存在同样的实现方法
+    }
+    partial class SampleClass
+    {
+        public void MethodTwo() { Console.WriteLine("Two");}
+
+        public partial void ApiMethodLoad()
+        {
+            Console.WriteLine("Api Method Impl");
+        }
+    }
+
+    public static class StringExtension
+    {
+        public static int GetWordCount(this string s) => //扩展方法同命名空间下
+            s.Split().Length;
+
+        public static int WorldLength(this string s, out int valCount) => //扩展方法
+            valCount = s.Length;
+    }
     internal class Program
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine("FOX".GetWordCount());
+            Console.WriteLine("FOX".WorldLength(out int valCount));
+            Console.WriteLine(valCount);
+            //var sampleClass = new SampleClass();
+            //sampleClass.MethodOne();
+            //sampleClass.MethodTwo();
+
+
+            //Console.WriteLine(DaysOfWeek.Monday | DaysOfWeek.Friday);//么有flag标致 按照整数进行运算 值为17 否则为 Monday,Friday
             //ObjectStruct objectStruct;
             //objectStruct.Value = 3;
+            //DaysOfWeek monDay;
+            //Enum.TryParse<DaysOfWeek>("Monday", out monDay);
+            //Console.WriteLine(monDay);
+
+            //foreach (var day in Enum.GetNames(typeof(DaysOfWeek)))
+            //{
+            //    Console.WriteLine(day);
+            //}
+
+            //foreach (var val in Enum.GetValues(typeof(DaysOfWeek)))
+            //{
+            //    Console.WriteLine(val);
+            //}
 
 
             //Dimensions point;
@@ -199,25 +261,25 @@ namespace ObjectConsoleApp
             //Console.Write(docker.GetType() == check.GetType());
 
 
-            var phoneCustomer = new PhoneCustomer
-            {
-                FirstName = "andy"
-            };
-            var oj = new ObjectStruct
-            {
-                Value = 10
-            };
-            phoneCustomer.Change(ref oj);
-            Console.WriteLine(oj.Value);
+            //var phoneCustomer = new PhoneCustomer
+            //{
+            //    FirstName = "andy"
+            //};
+            //var oj = new ObjectStruct
+            //{
+            //    Value = 10
+            //};
+            //phoneCustomer.Change(ref oj);
+            //Console.WriteLine(oj.Value);
 
-            Person p = new Person("Newly");
-            phoneCustomer.ChangeClass(ref p);
-            Console.WriteLine(p.Name);
-            Console.WriteLine(phoneCustomer.ParseInt(Console.ReadLine(), out var result)
-                ? $"当前输入数字为:{result}"
-                : "输入非数字!");// out关键字使用 作为方法执行结果返回
-            Console.WriteLine("+++"+(p.IntNumber.HasValue ? p.IntNumber.Value : 0) +"+++");//使用可空类型的HasValue/Value判断
-            Console.WriteLine("+++"+(p.IntNumber ?? 0) +"+++");
+            //Person p = new Person("Newly");
+            //phoneCustomer.ChangeClass(ref p);
+            //Console.WriteLine(p.Name);
+            //Console.WriteLine(phoneCustomer.ParseInt(Console.ReadLine(), out var result)
+            //    ? $"当前输入数字为:{result}"
+            //    : "输入非数字!");// out关键字使用 作为方法执行结果返回
+            //Console.WriteLine("+++"+(p.IntNumber.HasValue ? p.IntNumber.Value : 0) +"+++");//使用可空类型的HasValue/Value判断
+            //Console.WriteLine("+++"+(p.IntNumber ?? 0) +"+++");
 
             //Console.WriteLine(phoneCustomer.Say());
             //Console.WriteLine($"{Math.GetPi()}");
@@ -234,6 +296,6 @@ namespace ObjectConsoleApp
             //var car = new Car("GUB");
             //Console.WriteLine(car._name);
         }
-    }
+}
 }
 
