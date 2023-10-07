@@ -12,3 +12,5 @@
 /ObjectConsoleApp/ObjectConsoleApp/obj
 *.bin
 /.vs
+/ExtendConsoleApp/ExtendConsoleApp/.vs/ExtendConsoleApp
+/ExtendConsoleApp/ExtendConsoleApp/obj
