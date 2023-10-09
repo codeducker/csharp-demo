@@ -2,16 +2,12 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/HelloWorld/HelloWorld/.vs/HelloWorld
-/HelloWorld/HelloWorld/bin/Debug/net6.0
-/HelloWorld/HelloWorld/obj
-/HelloWorld/HelloWorld/Properties
+/*/*/.vs/*
 *.exe
-/ObjectConsoleApp/ObjectConsoleApp/.vs/ObjectConsoleApp
-/ObjectConsoleApp/ObjectConsoleApp/bin/Debug/net6.0
-/ObjectConsoleApp/ObjectConsoleApp/obj
 *.bin
 /.vs
-/ExtendConsoleApp/ExtendConsoleApp/.vs/ExtendConsoleApp
-/ExtendConsoleApp/ExtendConsoleApp/obj
-/ExtendConsoleApp/ExtendConsoleApp/bin/Debug/net6.0
+/*/*/Properties
+/*/*/.vs/*
+/*/*/obj
+/*/*/bin/Debug/net6.0
+
