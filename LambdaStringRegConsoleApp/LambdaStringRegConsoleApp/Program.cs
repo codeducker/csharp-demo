@@ -16,10 +16,15 @@ namespace LambdaStringRegConsoleApp
     {
         internal static void Main(string[] args)
         {
+
+            Regex reg = new Regex("[0-9]*");//这是搜索匹配0-9的数字
+            Console.WriteLine(reg.Match("12asda"));//最后提取出了12成功，嘻嘻
+
+
             var line = "Hey, I've just found this amazing URI at " +
                           "http:// what was it -oh yes https://www.wrox.com or " +
                           "http://www.wrox.com:80";
-            var pattern = @"\b([http|https]:www\.[a-zA-Z]+\.\w+[:]+)?\b";
+            var pattern = @"\bhttp[s]{0,}://\w+.\w+.\w+([:]{0,}\d+)?";
             var r = new Regex(pattern);
             MatchCollection mc = r.Matches(line);
             foreach (Match m in mc)
