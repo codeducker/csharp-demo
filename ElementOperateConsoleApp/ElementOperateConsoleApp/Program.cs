@@ -1,11 +1,86 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Microsoft.VisualBasic.CompilerServices;
+
 
 namespace ElementOperateConsoleApp
 {
+
     internal class Program
     {
         internal static void Main(string[] args)
         {
+
+            var vector = new Vector(1.0,2.3,4.0);
+            Console.WriteLine(vector);
+            float balance = vector;
+            Console.WriteLine($"convert balance : {balance}");
+            Vector otherVec = (Vector)balance;
+            Console.WriteLine($"Convert Vector :{otherVec} ");
+
+            long lBanace = (long)vector;//此时默认先将vector转成float然后float再转换成long
+            Console.WriteLine(lBanace);
+
+
+
+
+            //var vector = new Vector(1.0,2.3,4.0);
+            //var f = (float)vector;
+            //Console.WriteLine(f);
+
+            var check = 2;
+            short bak = (short)check;
+            Console.WriteLine(bak);
+
+
+            var p1 = new Person(12, "Senna", new DateTime(1960, 3, 21));
+            var p2 = new Person(43, "Peterson", new DateTime(1944, 2, 14));
+            var p3 = new Person(25, "RinZ", new DateTime(1942, 4, 18));
+            var p4 = new Person(78, "CeoVt", new DateTime(1944, 2, 25));
+            var coll = new PersonCollection(p1, p2, p3, p4);
+
+            Console.WriteLine(coll[2]);//自定义索引运算符
+
+            foreach (var r in coll[new DateTime(1960, 3, 21)])
+            {
+                Console.WriteLine(r);
+            }
+
+            Vector v1, v2, v3;
+            v1 = new Vector(3.0, 3.0, 1.0);
+            v2 = new Vector(2.0, -4.0, -4.0);
+            v3 = v1 + v2;
+            Console.WriteLine($"V1 = {v1}");
+            Console.WriteLine($"V2 = {v2}");
+            Console.WriteLine($"V3 = {v3}");
+
+            //System.ValueType 重写 Equal方法 用于值类型相等比较
+            Person co = new Person(1, "name");
+            Person cd = co;
+            Console.WriteLine(ReferenceEquals(co,cd));
+            Console.WriteLine(Equals(co, cd));
+            int? a = null;
+            int  b = a ?? 10; //值为空，默认值
+            Console.WriteLine(b);
+
+
+            //unsafe unsafe只能是在unsafe上下文中使用
+            //{
+            //    Console.WriteLine(sizeof(int));
+            //}
+
+            long val = 3000000000;
+            int ios = unchecked((int)val);
+            Console.WriteLine(ios);
+
+            Console.WriteLine(nameof(PrintValues));//可以传入符号，属性，方法
+
+            byte vb = Byte.MaxValue;
+            unchecked
+            {
+                vb++;
+            }
+            Console.WriteLine(vb);
 
             //IStructuralEquatable
             var musicTitles = new MusicTitles(
@@ -86,8 +161,6 @@ namespace ElementOperateConsoleApp
                 var enumeratorCurrent = enumerator.Current;
                 Console.WriteLine(enumeratorCurrent.ToString());
             }
-
-            Console.WriteLine("-----");
 
             //数组作为参数可以支持协变，但是只能是引用类型，值类型数组发生报错
             CheckGet(persons);
@@ -334,6 +407,28 @@ namespace ElementOperateConsoleApp
         }
     }
 
+    //实现自定义索引运算符
+    class PersonCollection
+    {
+        private Person[] _persons;
+
+        public PersonCollection(params Person[] pers)
+        {
+            _persons = pers.ToArray();
+        }
+
+        public Person this[int index] //这里不仅可以为int 也可以是其他类型
+        {
+            get => _persons[index];
+            set => _persons[index] = value;
+        }
+        
+        public IEnumerable<Person> this[DateTime birthday]
+        {
+            get => _persons.Where(p => p.Birthday == birthday);
+        }
+    }
+
 
     class Person : IEquatable<Person>
     {
@@ -343,10 +438,19 @@ namespace ElementOperateConsoleApp
 
         public string Name { get; }
 
+        public DateTime Birthday { get; set; }
+
         public Person(int age, string name)
         {
             this.Age = age;
             this.Name = name;
+        }
+
+        public Person(int age, string name, DateTime birthday)
+        {
+            this.Age = age;
+            this.Name = name;
+            this.Birthday = birthday;
         }
 
         public override string ToString() => $"{Id}, {Name} {Age}";
@@ -393,6 +497,59 @@ namespace ElementOperateConsoleApp
                 default:
                     throw new ArgumentException("unexpected compare type");
             }
+        }
+    }
+
+    struct Vector
+    {
+        public Vector(double x, double y, double z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+        public Vector(Vector v)
+        {
+            X = v.X;
+            Y = v.Y;
+            Z = v.Z;
+        }
+        public double X { get; }
+        public double Y { get; }
+        public double Z { get; }
+        public override string ToString() => $"( {X}, {Y}, {Z} )";
+        
+        //操作符重载 
+        public static Vector operator +(Vector left, Vector right) =>
+            new Vector(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+
+        public static Vector operator *(double left, Vector right) =>
+            new Vector(left * right.X, left * right.Y, left * right.Z);
+
+        //比较运算符 == 必须 配合 != 一同申明
+        public static bool operator ==(Vector left, Vector right)
+        {
+            if (object.ReferenceEquals(left, right)) return true;
+            return left.X == right.X && left.Y == right.Y && left.Z == right.Z;
+        }
+
+        public static bool operator !=(Vector left, Vector right) => !(left == right);
+
+        public override bool Equals(object other)
+        {
+            return (other as Vector?) == this;
+        }
+        //自定义类型强制转换
+        public static implicit operator float(Vector v)
+        {
+            return (float)(v.X+v.Y);
+        }
+        
+        public static explicit operator Vector(float value)
+        {
+            uint dollars = (uint)value;
+            ushort cents = (ushort)((value - dollars) * 100);
+            return new Vector(dollars, cents,0.0);
         }
     }
 }
